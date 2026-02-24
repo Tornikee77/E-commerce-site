@@ -39,15 +39,13 @@ export class AuthService {
     const user = await this.usersService.getUser({ email });
 
     if (!user) {
-      console.log(`მომხმარებელი იმეილით ${email} ვერ მოიძებნა`);
-      throw new UnauthorizedException('მომხმარებელი არ არსებობს');
+      throw new UnauthorizedException();
     }
 
     const authenticated = await bcrypt.compare(password, user.password);
 
     if (!authenticated) {
-      console.log(`პაროლი არასწორია მომხმარებლისთვის: ${email}`);
-      throw new UnauthorizedException('პაროლი არასწორია');
+      throw new UnauthorizedException();
     }
 
     return user;
