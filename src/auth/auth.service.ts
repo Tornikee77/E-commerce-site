@@ -36,15 +36,20 @@ export class AuthService {
     return { tokenPayload };
   }
   async verifyUser(email: string, password: string) {
-    try {
-      const user = await this.usersService.getUser({ email });
-      const authenticated = await bcrypt.compare(password, user.password);
-      if (!authenticated) {
-        throw new UnauthorizedException();
-      }
-      return user;
-    } catch (error) {
-      throw new UnauthorizedException('Credentials are not valid!');
+    const user = await this.usersService.getUser({ email });
+
+    if (!user) {
+      console.log(`მომხმარებელი იმეილით ${email} ვერ მოიძებნა`);
+      throw new UnauthorizedException('მომხმარებელი არ არსებობს');
     }
+
+    const authenticated = await bcrypt.compare(password, user.password);
+
+    if (!authenticated) {
+      console.log(`პაროლი არასწორია მომხმარებლისთვის: ${email}`);
+      throw new UnauthorizedException('პაროლი არასწორია');
+    }
+
+    return user;
   }
 }

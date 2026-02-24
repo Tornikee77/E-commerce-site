@@ -29,7 +29,7 @@ export class UsersService {
   }
 
   async getUser(filter: Prisma.UserWhereUniqueInput) {
-    return this.prismaService.user.findUniqueOrThrow({
+    return this.prismaService.user.findUnique({
       where: filter,
     });
   }
