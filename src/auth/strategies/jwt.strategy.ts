@@ -1,16 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'; // დაამატე UnauthorizedException
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { TokenPayload } from '../token-payload.interface';
-import { UsersService } from '../../users/users.service'; // შემოიტანე UsersService
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     configService: ConfigService,
-    private readonly usersService: UsersService, // დააინექტირე სერვისი
+    private readonly usersService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -20,16 +20,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // NestJS ავტომატურად გამოიძახებს ამას, თუ ტოკენი ვალიდურია
   async validate(payload: TokenPayload) {
-    // ბაზიდან ამოგვაქვს მომხმარებელი ID-ით
     const user = await this.usersService.getUser({ id: payload.userId });
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    // რასაც აქ დააბრუნებ, ის იქნება შენი @CurrentUser
-    return user;
+    return payload;
   }
 }
