@@ -32,4 +32,7 @@ export class CheckoutService {
       cancel_url: this.configService.getOrThrow('STRIPE_CANCEL_URL'),
     });
   }
+  async handleCheckoutWebhook(event: any) {
+    console.log(event);
+  }
 }
