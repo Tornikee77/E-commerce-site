@@ -13,7 +13,7 @@ export class CheckoutService {
 
   async createSession(productId: number) {
     const product = await this.productService.getProduct(productId);
-    this.stripe.checkout.sessions.create({
+    return await this.stripe.checkout.sessions.create({
       line_items: [
         {
           price_data: {
