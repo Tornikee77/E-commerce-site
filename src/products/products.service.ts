@@ -18,8 +18,12 @@ export class ProductsService {
     });
   }
 
-  async getProducts() {
-    const products = this.prismaService.product.findMany();
+  async getProducts(status?: string) {
+    const args: Prisma.ProductFindManyArgs = {};
+    if (status === 'available') {
+      args.where = { sold: false };
+    }
+    const products = this.prismaService.product.findMany(args);
     return Promise.all(
       (await products).map(async (product) => ({
         ...product,
